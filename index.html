@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Маяк — Авторизация Яндекс</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body {
+      background: #0f0f11;
+      color: #f5f5f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background: #1c1c1e;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    h2 { font-size: 20px; margin-bottom: 8px; color: #30d158; }
+    p { font-size: 14px; color: #86868b; margin-bottom: 20px; line-height: 1.4; }
+    .input-wrap {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    input {
+      flex: 1;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+    button {
+      background: #f36e21;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:active { opacity: 0.8; }
+    .hint {
+      font-size: 12px;
+      color: #a1a1a6;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+      text-align: left;
+    }
+    ol { padding-left: 18px; margin: 8px 0 0; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>✓ Вход выполнен</h2>
+    <p>Яндекс успешно выдал токен доступа. Скопируйте его для вашего приложения:</p>
+    
+    <div class="input-wrap">
+      <input id="tokenField" readonly value="Токен не найден">
+      <button id="copyBtn" onclick="copyToken()">Копировать</button>
+    </div>
+
+    <div class="hint">
+      <strong>Что делать дальше:</strong>
+      <ol>
+        <li>Нажмите кнопку <b>«Копировать»</b>.</li>
+        <li>Вернитесь в локальный файл трекера.</li>
+        <li>Нажмите кнопку <b>«Войти с Яндекс ID»</b> и вставьте скопированный токен в появившееся окно.</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const token = params.get('access_token');
+
+    const tokenField = document.getElementById('tokenField');
+    const copyBtn = document.getElementById('copyBtn');
+
+    if (token) {
+      tokenField.value = token;
+      // Пробуем скопировать сразу в буфер
+      navigator.clipboard.writeText(token).then(() => {
+        copyBtn.textContent = 'Скопировано!';
+      }).catch(() => {});
+    }
+
+    function copyToken() {
+      tokenField.select();
+      navigator.clipboard.writeText(tokenField.value);
+      copyBtn.textContent = 'Скопировано!';
+      setTimeout(() => { copyBtn.textContent = 'Копировать'; }, 2000);
+    }
+  </script>
+</body>
+</html>
