@@ -2,104 +2,105 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Маяк — Авторизация</title>
   <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     body {
       background: #000;
       color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       margin: 0;
+      padding: 16px;
       text-align: center;
-      padding: 20px;
     }
-    .box {
+    .card {
       background: #1c1c1e;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
       padding: 24px;
-      max-width: 460px;
+      max-width: 420px;
       width: 100%;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
     }
+    h2 { margin: 0 0 10px; font-size: 20px; color: #30d158; }
+    p { font-size: 14px; color: #8e8e93; margin: 0 0 18px; line-height: 1.4; }
     input {
       width: 100%;
-      background: #000;
+      background: #0a0a0c;
       border: 1px solid #333;
-      color: #30d158;
-      padding: 10px;
-      border-radius: 8px;
+      color: #ff9f0a;
+      padding: 12px;
+      border-radius: 12px;
       font-size: 13px;
-      margin-top: 10px;
-      box-sizing: border-box;
       text-align: center;
+      outline: none;
+      margin-bottom: 14px;
     }
-    button {
+    .btn {
+      width: 100%;
       background: #f36e21;
       color: #fff;
       border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
       font-weight: 600;
-      margin-top: 12px;
       cursor: pointer;
     }
+    .btn:active { opacity: 0.85; }
+    .status { font-size: 12px; color: #30d158; margin-top: 10px; min-height: 18px; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h3 id="statusText">Авторизация успешна!</h3>
-    <p id="subText" style="color: #888; font-size: 14px;">Закрываем окно...</p>
+  <div class="card">
+    <h2>✓ Вход подтверждён!</h2>
+    <p>Токен получен. Скопируйте его и вернитесь в трекер задач.</p>
     
-    <div id="manualBlock" style="display: none;">
-      <p style="color: #aaa; font-size: 13px;">Если окно не закрылось само, скопируйте токен и вставьте в приложении:</p>
-      <input id="tokenField" readonly>
-      <button onclick="copyToken()">Скопировать токен</button>
-    </div>
+    <input id="tokenInput" readonly value="Получение токена...">
+    <button class="btn" id="copyBtn" onclick="copyToken()">Скопировать токен</button>
+    <div class="status" id="statusMsg"></div>
   </div>
 
   <script>
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
     const token = params.get('access_token');
+    const input = document.getElementById('tokenInput');
+    const statusMsg = document.getElementById('statusMsg');
 
     if (token) {
-      document.getElementById('tokenField').value = token;
+      input.value = token;
 
-      // 1. Пытаемся отправить токен родительскому окну через BroadcastChannel (работает даже между вкладками)
+      // Пробуем скопировать в буфер автоматически
+      navigator.clipboard.writeText(token).then(() => {
+        statusMsg.textContent = '✓ Токен автоматически скопирован в буфер!';
+      }).catch(() => {});
+
+      // Пробуем послать в родительское окно (если это десктоп)
       try {
         const channel = new BroadcastChannel('mayak_auth_channel');
         channel.postMessage({ type: 'YANDEX_TOKEN', token: token });
       } catch(e) {}
-
-      // 2. Пытаемся отправить через postMessage
       if (window.opener) {
         window.opener.postMessage({ type: 'YANDEX_TOKEN', token: token }, '*');
       }
-
-      // 3. Закрываем popup через секунду
-      setTimeout(() => {
-        window.close();
-      }, 800);
-
-      // Если браузер запретил закрытие окна, показываем резервную кнопку копирования
-      setTimeout(() => {
-        document.getElementById('subText').style.display = 'none';
-        document.getElementById('manualBlock').style.display = 'block';
-      }, 1200);
     } else {
-      document.getElementById('statusText').textContent = 'Токен не получен';
-      document.getElementById('subText').textContent = 'Попробуйте войти заново.';
+      input.value = 'Ошибка: токен не найден';
+      input.style.color = '#ff453a';
     }
 
     function copyToken() {
-      const f = document.getElementById('tokenField');
-      f.select();
-      navigator.clipboard.writeText(f.value);
-      alert('Токен скопирован! Вставьте его в окно в приложении.');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        statusMsg.textContent = '✓ Скопировано! Переключитесь обратно в Маяк.';
+      }).catch(() => {
+        statusMsg.textContent = 'Выделите текст в поле и скопируйте вручную.';
+      });
     }
   </script>
 </body>
