@@ -2,104 +2,324 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Маяк — Авторизация</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LUMTURO — Авторизация в облаке</title>
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
-      background: #000;
-      color: #fff;
+      background: #090a0f;
+      color: #f3f4f6;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      margin: 0;
-      padding: 16px;
+      padding: 20px 16px;
       text-align: center;
     }
     .card {
-      background: #1c1c1e;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 24px;
-      max-width: 420px;
+      background: #12141c;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 32px 24px;
+      max-width: 440px;
       width: 100%;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    h2 { margin: 0 0 10px; font-size: 20px; color: #30d158; }
-    p { font-size: 14px; color: #8e8e93; margin: 0 0 18px; line-height: 1.4; }
-    input {
-      width: 100%;
-      background: #0a0a0c;
-      border: 1px solid #333;
-      color: #ff9f0a;
-      padding: 12px;
-      border-radius: 12px;
+    .logo-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(229,169,60,0.2), rgba(229,169,60,0.05));
+      border: 1px solid rgba(229,169,60,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(229,169,60,0.15);
+    }
+    .brand-name {
       font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #e5a93c;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    p {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .token-box {
+      width: 100%;
+      background: #0b0c12;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #e5a93c;
       text-align: center;
       outline: none;
-      margin-bottom: 14px;
+      word-break: break-all;
+      margin-bottom: 18px;
     }
-    .btn {
+    .actions-stack {
       width: 100%;
-      background: #f36e21;
-      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #e5a93c 0%, #c48b26 100%);
+      color: #0b0c12;
       border: none;
       padding: 14px;
-      border-radius: 12px;
+      border-radius: 14px;
       font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(229, 169, 60, 0.3);
+      text-decoration: none;
+      transition: transform 0.1s ease, filter 0.15s ease;
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+      filter: brightness(0.9);
+    }
+    .btn-secondary {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      color: #e5e7eb;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 13px;
+      border-radius: 14px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: background 0.15s ease;
     }
-    .btn:active { opacity: 0.85; }
-    .status { font-size: 12px; color: #30d158; margin-top: 10px; min-height: 18px; }
+    .btn-secondary:active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(48, 209, 88, 0.15);
+      border: 1px solid rgba(48, 209, 88, 0.3);
+      color: #30d158;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .status-badge.error {
+      background: rgba(255, 69, 58, 0.15);
+      border-color: rgba(255, 69, 58, 0.3);
+      color: #ff453a;
+    }
+    .footer-hint {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>✓ Вход подтверждён!</h2>
-    <p>Токен получен. Скопируйте его и вернитесь в трекер задач.</p>
+    <div class="logo-badge">
+      <svg width="34" height="34" viewBox="0 0 100 100" fill="none">
+        <polygon points="50,15 20,82 80,82" fill="url(#grad)" opacity="0.3"/>
+        <line x1="50" y1="15" x2="50" y2="82" stroke="#e5a93c" stroke-width="3" stroke-dasharray="4,4"/>
+        <circle cx="50" cy="50" r="18" fill="#e5a93c" filter="drop-shadow(0 0 8px rgba(229,169,60,0.8))"/>
+        <circle cx="50" cy="50" r="8" fill="#fff"/>
+        <defs>
+          <linearGradient id="grad" x1="50" y1="15" x2="50" y2="82" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#e5a93c" stop-opacity="0.8"/>
+            <stop offset="1" stop-color="#e5a93c" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="brand-name">LUMTURO</div>
+    <h1 id="pageTitle">Авторизация подтверждена!</h1>
     
-    <input id="tokenInput" readonly value="Получение токена...">
-    <button class="btn" id="copyBtn" onclick="copyToken()">Скопировать токен</button>
-    <div class="status" id="statusMsg"></div>
+    <div class="status-badge" id="statusBadge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span id="statusText">Токен скопирован в буфер</span>
+    </div>
+
+    <p id="descText">Возвращайтесь в LUMTURO — синхронизация начнётся автоматически.</p>
+
+    <input id="tokenInput" class="token-box" readonly value="Получение ключа...">
+
+    <div class="actions-stack">
+      <a id="openAppBtn" class="btn-primary" href="lumturo://">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h6v6"/>
+          <path d="M10 14L21 3"/>
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        </svg>
+        <span>Вернуться в LUMTURO</span>
+      </a>
+
+      <button type="button" class="btn-secondary" id="copyBtn" onclick="copyTokenManual()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <span>Скопировать токен повторно</span>
+      </button>
+    </div>
+
+    <div class="footer-hint">
+      Если приложение не открылось по кнопке, просто переключитесь обратно в приложение LUMTURO — токен подхватится из буфера обмена.
+    </div>
   </div>
 
   <script>
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-    const token = params.get('access_token');
-    const input = document.getElementById('tokenInput');
-    const statusMsg = document.getElementById('statusMsg');
+    function extractTokenFromLocation() {
+      const full = window.location.href;
+      const hash = window.location.hash.substring(1);
+      const search = window.location.search.substring(1);
 
-    if (token) {
-      input.value = token;
+      const paramsHash = new URLSearchParams(hash);
+      const paramsSearch = new URLSearchParams(search);
 
-      // Пробуем скопировать в буфер автоматически
-      navigator.clipboard.writeText(token).then(() => {
-        statusMsg.textContent = '✓ Токен автоматически скопирован в буфер!';
-      }).catch(() => {});
+      let token = paramsHash.get('access_token') || 
+                  paramsSearch.get('access_token') || 
+                  paramsHash.get('token') || 
+                  paramsSearch.get('token');
 
-      // Пробуем послать в родительское окно (если это десктоп)
-      try {
-        const channel = new BroadcastChannel('mayak_auth_channel');
-        channel.postMessage({ type: 'YANDEX_TOKEN', token: token });
-      } catch(e) {}
-      if (window.opener) {
-        window.opener.postMessage({ type: 'YANDEX_TOKEN', token: token }, '*');
+      if (!token) {
+        const match = full.match(/(?:access_token|token)=([a-zA-Z0-9_\-\.]+)/);
+        if (match && match[1]) {
+          token = match[1];
+        }
       }
-    } else {
-      input.value = 'Ошибка: токен не найден';
-      input.style.color = '#ff453a';
+      return token;
     }
 
-    function copyToken() {
-      input.select();
-      navigator.clipboard.writeText(input.value).then(() => {
-        statusMsg.textContent = '✓ Скопировано! Переключитесь обратно в Маяк.';
+    const token = extractTokenFromLocation();
+    const tokenInput = document.getElementById('tokenInput');
+    const statusBadge = document.getElementById('statusBadge');
+    const statusText = document.getElementById('statusText');
+    const descText = document.getElementById('descText');
+    const pageTitle = document.getElementById('pageTitle');
+    const openAppBtn = document.getElementById('openAppBtn');
+
+    if (token) {
+      tokenInput.value = token;
+      const isGoogle = token.startsWith('ya29.');
+      const providerName = isGoogle ? 'Google Диск' : 'Яндекс Диск';
+
+      pageTitle.textContent = `Вход в ${providerName} выполнен!`;
+      descText.textContent = `Токен для ${providerName} получен. Переключитесь в LUMTURO.`;
+
+      // 1. Автоматическое копирование в системный буфер обмена
+      navigator.clipboard.writeText(token).then(() => {
+        statusText.textContent = 'Токен скопирован в буфер обмена';
       }).catch(() => {
-        statusMsg.textContent = 'Выделите текст в поле и скопируйте вручную.';
+        statusText.textContent = 'Токен готов к использованию';
+      });
+
+      // 2. Отправка через BroadcastChannels
+      try {
+        const chLumturo = new BroadcastChannel('lumturo_auth_channel');
+        chLumturo.postMessage({ type: 'AUTH_TOKEN', token: token, provider: isGoogle ? 'google' : 'yandex' });
+      } catch (e) {}
+
+      try {
+        const chGoogle = new BroadcastChannel('lumturo_google_auth_channel');
+        chGoogle.postMessage({ type: 'GOOGLE_TOKEN', token: token });
+      } catch (e) {}
+
+      try {
+        const chMayak = new BroadcastChannel('mayak_auth_channel');
+        chMayak.postMessage({ type: isGoogle ? 'GOOGLE_TOKEN' : 'YANDEX_TOKEN', token: token });
+      } catch (e) {}
+
+      // 3. Отправка в window.opener
+      if (window.opener) {
+        try {
+          window.opener.postMessage({ type: 'LUMTURO_AUTH', token: token, provider: isGoogle ? 'google' : 'yandex' }, '*');
+          window.opener.postMessage({ type: isGoogle ? 'GOOGLE_TOKEN' : 'YANDEX_TOKEN', token: token }, '*');
+        } catch (e) {}
+      }
+
+      // 4. Ссылка для возврата в приложение (с диплинками lumturo:// и fallback)
+      const deepLink = `lumturo://auth#access_token=${encodeURIComponent(token)}&provider=${isGoogle ? 'google' : 'yandex'}`;
+      openAppBtn.href = deepLink;
+
+      openAppBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Сначала пробуем схему lumturo://
+        window.location.href = deepLink;
+        // Запасная попытка через 400мс на схему mayak://
+        setTimeout(() => {
+          window.location.href = `mayak://auth#access_token=${encodeURIComponent(token)}`;
+        }, 400);
+      });
+
+      // 5. Попытка плавного редиректа на мобильных устройствах
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        setTimeout(() => {
+          try {
+            window.location.href = deepLink;
+          } catch(e) {}
+        }, 600);
+      }
+    } else {
+      tokenInput.value = 'Токен не найден в параметрах';
+      statusBadge.className = 'status-badge error';
+      statusText.textContent = 'Ошибка авторизации';
+      pageTitle.textContent = 'Не удалось получить токен';
+      descText.textContent = 'Проверьте настройки OAuth или попробуйте авторизоваться снова.';
+      openAppBtn.href = 'lumturo://';
+    }
+
+    function copyTokenManual() {
+      tokenInput.select();
+      navigator.clipboard.writeText(tokenInput.value).then(() => {
+        statusText.textContent = 'Скопировано в буфер обмена!';
+        statusBadge.className = 'status-badge';
+      }).catch(() => {
+        statusText.textContent = 'Выделите текст и скопируйте';
       });
     }
   </script>
